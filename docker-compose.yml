@@ -1,0 +1,33 @@
+version: '3.8'
+
+services:
+  nexus-flow:
+    build: .
+    container_name: nexus-flow
+    restart: unless-stopped
+    environment:
+      - TELEGRAM_BOT_TOKEN=${TELEGRAM_BOT_TOKEN:-}
+      - DISCORD_BOT_TOKEN=${DISCORD_BOT_TOKEN:-}
+      - ALLOWED_USER_IDS=${ALLOWED_USER_IDS:-}
+      - DISCORD_ALLOWED_USER_IDS=${DISCORD_ALLOWED_USER_IDS:-}
+      - GEMINI_API_KEY=${GEMINI_API_KEY}
+      - DEEPSEEK_API_KEY=${DEEPSEEK_API_KEY:-}
+      - OPENAI_API_KEY=${OPENAI_API_KEY:-}
+      - ACTIVE_LLM=${ACTIVE_LLM:-gemini}
+      - TRANSCRIPTION_MODE=${TRANSCRIPTION_MODE:-openai}
+      - LOG_LEVEL=${LOG_LEVEL:-info}
+      - TZ=America/Sao_Paulo
+    volumes:
+      - nexus-flow-data:/app/data
+      - nexus-flow-logs:/app/logs
+      - ./agents/skills:/app/agents/skills:ro
+    deploy:
+      resources:
+        limits:
+          memory: 512M
+        reservations:
+          memory: 128M
+
+volumes:
+  nexus-flow-data:
+  nexus-flow-logs:
